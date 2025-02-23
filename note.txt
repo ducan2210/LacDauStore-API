@@ -1,0 +1,10 @@
+Các toán tử khác của Op trong Sequelize:
+Op.eq: Equals (bằng)
+Op.ne: Not equal (không bằng)
+Op.gt: Greater than (lớn hơn)
+Op.gte: Greater than or equal (lớn hơn hoặc bằng)
+Op.lt: Less than (nhỏ hơn)
+Op.lte: Less than or equal (nhỏ hơn hoặc bằng)
+Op.in: IN (trong một tập hợp giá trị)
+Op.notIn: NOT IN (không trong một tập hợp giá trị)
+Op.like: Like (tìm kiếm chuỗi theo mẫu)

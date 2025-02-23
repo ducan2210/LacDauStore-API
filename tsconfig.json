@@ -1,0 +1,38 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES6",
+//     "module": "commonjs",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "outDir": "./dist"
+//   },
+//   "include": [
+//     "src/**/*.ts"
+// , "src/custom.d.ts"  ],
+//   "exclude": [
+//     "node_modules"
+//   ]
+// }
+
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src", // Thêm rootDir để chỉ định thư mục gốc của mã nguồn
+    "sourceMap": true // Thêm sourceMap để hỗ trợ debug
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/custom.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
