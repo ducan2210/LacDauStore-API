@@ -1,4 +1,4 @@
-import {updateUser} from './../controllers/user.controller';
+import {loginWithGoogle, updateUser} from './../controllers/user.controller';
 import express from 'express';
 import {
   createUser,
@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.post('/CreateUser', createUser);
 router.post('/Login', login);
+router.post('/LoginWithGoogle', loginWithGoogle);
 router.get('/GetUser', authenticateToken, getUserByUsername);
 
 router.put('/UpdateUser', authenticateToken, updateUser);

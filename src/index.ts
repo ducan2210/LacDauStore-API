@@ -11,6 +11,7 @@ import paymentRoutes from './routes/payment.route';
 import addressRoutes from './routes/address.route';
 import order from './routes/order.route';
 import orderItem from './routes/orderItem.route';
+import auth from './routes/auth.route';
 const app = express();
 const port = 3000;
 
@@ -25,6 +26,7 @@ app.use('/api', paymentRoutes);
 app.use('/api', addressRoutes);
 app.use('/api', order);
 app.use('/api', orderItem);
+app.use('/api', auth);
 sequelize
   .authenticate()
   .then(() => {

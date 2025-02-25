@@ -2,8 +2,70 @@ import jwt from 'jsonwebtoken';
 import {Request, RequestHandler, Response} from 'express';
 import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
-import Cart from '../models/cart.model';
+import {OAuth2Client} from 'google-auth-library';
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret';
+
+const GOOGLE_CLIENT_ID =
+  process.env.GOOGLE_CLIENT_ID ||
+  '629627177990-9ne7td287mpqrvqn34kkss8p8ljfdhr2.apps.googleusercontent.com';
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+async function verifyGoogleToken(token: string) {
+  const ticket = await googleClient.verifyIdToken({
+    idToken: token,
+    audience: GOOGLE_CLIENT_ID,
+  });
+  return ticket.getPayload(); // Trả về payload hoặc undefined
+}
+
+// Hàm đăng nhập bằng Google
+export const loginWithGoogle = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const {googleToken} = req.body;
+  console.log('Google Token:', googleToken);
+  try {
+    // Xác minh token từ Google
+    const googlePayload = await verifyGoogleToken(googleToken);
+    if (!googlePayload || !googlePayload.email) {
+      res.status(401).json({error: 'Invalid Google token or missing email'});
+      return;
+    }
+
+    const email = googlePayload.email; // Đã chắc chắn email tồn tại
+    const googleId = googlePayload.sub; // ID người dùng từ Google
+
+    // Tìm hoặc tạo người dùng dựa trên email
+    let user = await User.findOne({where: {email}});
+    if (!user) {
+      // Nếu chưa có, tạo user mới (không cần password)
+      user = await User.create({
+        username: email.split('@')[0], // Tạo username từ email
+        email,
+      });
+    }
+
+    // Tạo token JWT của bạn
+    const token = jwt.sign(
+      {id: user.user_id, username: user.username},
+      JWT_SECRET,
+      {expiresIn: '7d'},
+    );
+
+    // Ẩn các trường nhạy cảm trước khi trả về
+    const {password: _, ...userWithoutPassword} = user.toJSON();
+
+    res.status(200).json({
+      message: 'Login with Google successful',
+      token,
+      user: userWithoutPassword,
+    });
+  } catch (error) {
+    console.error('Error in Google login:', error);
+    res.status(500).json({error: 'Error logging in with Google'});
+  }
+};
 
 export const createUser = async (req: Request, res: Response) => {
   const {username, password, email} = req.body;
