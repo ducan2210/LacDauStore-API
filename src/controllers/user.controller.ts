@@ -34,15 +34,16 @@ export const loginWithGoogle = async (
     }
 
     const email = googlePayload.email; // Đã chắc chắn email tồn tại
-    const googleId = googlePayload.sub; // ID người dùng từ Google
 
     // Tìm hoặc tạo người dùng dựa trên email
     let user = await User.findOne({where: {email}});
+    const {v4: uuidv4} = require('uuid');
     if (!user) {
       // Nếu chưa có, tạo user mới (không cần password)
       user = await User.create({
         username: email.split('@')[0], // Tạo username từ email
         email,
+        password: uuidv4(),
       });
     }
 
