@@ -8,7 +8,7 @@ class UserGlobalNotification extends Model {
   public notification_id!: number;
   public status!: 'unread' | 'read';
   public read_at!: Date | null;
-  public GlobalNotification?: GlobalNotification; // Thêm thuộc tính tùy chọn
+  public GlobalNotification?: GlobalNotification; 
 }
 
 UserGlobalNotification.init(

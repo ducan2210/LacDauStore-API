@@ -33,8 +33,7 @@ export const loginWithGoogle = async (
       return;
     }
 
-    const email = googlePayload.email; // Đã chắc chắn email tồn tại
-
+    const email = googlePayload.email; // Đã chắc chắn email tồn tại 
     // Tìm hoặc tạo người dùng dựa trên email
     let user = await User.findOne({where: {email}});
     const {v4: uuidv4} = require('uuid');

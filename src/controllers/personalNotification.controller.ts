@@ -1,12 +1,10 @@
 import {Request, Response} from 'express';
 import PersonalNotification from '../models/personalNotification.model';
-import GlobalNotification from '../models/globalNotification.model';
 import UserGlobalNotification from '../models/userGlobalNotification.model';
 
 export const getNotificationByUserID = async (req: Request, res: Response) => {
   try {
     const {user_id} = req.query;
-
     if (!user_id || isNaN(parseInt(user_id as string))) {
       res.status(400).json({error: 'Invalid user_id'});
     }
@@ -40,6 +38,7 @@ export const getNotificationByUserID = async (req: Request, res: Response) => {
       ],
     });
 
+    // Chuẩn bị dữ liệu personal notifications
     const personalNotifData = personalNotifications.map(notif => ({
       notification_id: notif.notification_id,
       user_id: notif.user_id,
@@ -57,36 +56,40 @@ export const getNotificationByUserID = async (req: Request, res: Response) => {
             status: notif.Order.status,
           }
         : null,
+      source: 'personal',
     }));
 
+    // Chuẩn bị dữ liệu global notifications
     const globalNotifData = userGlobalNotifications.map(userNotif => ({
       notification_id: userNotif.notification_id,
       user_id: userNotif.user_id,
       status: userNotif.status,
       read_at: userNotif.read_at,
-      globalNotifData: userNotif.GlobalNotification
-        ? {
-            notification_id: userNotif.GlobalNotification.notification_id,
-            title: userNotif.GlobalNotification.title,
-            message: userNotif.GlobalNotification.message,
-            type: userNotif.GlobalNotification.type,
-            created_at: userNotif.GlobalNotification.created_at,
-            updated_at: userNotif.GlobalNotification.updated_at,
-          }
-        : null,
+      title: userNotif.GlobalNotification?.title,
+      message: userNotif.GlobalNotification?.message,
+      type: userNotif.GlobalNotification?.type,
+      created_at: userNotif.GlobalNotification?.created_at,
+      updated_at: userNotif.GlobalNotification?.updated_at,
+      order: null,
+      source: 'global',
     }));
 
+    // Gộp hai mảng thành một
+    const allNotifications = [...personalNotifData, ...globalNotifData];
+
+    // Sắp xếp giảm dần theo updated_at, xử lý trường hợp undefined
+    allNotifications.sort((a, b) => {
+      const dateA = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+      const dateB = b.updated_at ? new Date(b.updated_at).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    // Trả về kết quả
     res.status(200).json({
-      success: true,
-      data: {
-        personal_notifications: personalNotifData,
-        global_notifications: globalNotifData,
-      },
+      notifications: allNotifications,
     });
   } catch (error) {
-    console.error('Error in getNotificationByIDUser:', error);
     res.status(500).json({
-      success: false,
       error: error || 'Internal server error',
     });
   }
