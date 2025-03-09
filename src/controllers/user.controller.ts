@@ -24,7 +24,6 @@ export const loginWithGoogle = async (
   res: Response,
 ): Promise<void> => {
   const {googleToken} = req.body;
-  console.log('Google Token:', googleToken);
   try {
     // Xác minh token từ Google
     const googlePayload = await verifyGoogleToken(googleToken);
@@ -33,7 +32,7 @@ export const loginWithGoogle = async (
       return;
     }
 
-    const email = googlePayload.email; // Đã chắc chắn email tồn tại 
+    const email = googlePayload.email; // Đã chắc chắn email tồn tại
     // Tìm hoặc tạo người dùng dựa trên email
     let user = await User.findOne({where: {email}});
     const {v4: uuidv4} = require('uuid');
@@ -45,15 +44,12 @@ export const loginWithGoogle = async (
         password: uuidv4(),
       });
     }
-
-    // Tạo token JWT của bạn
     const token = jwt.sign(
       {id: user.user_id, username: user.username},
       JWT_SECRET,
       {expiresIn: '7d'},
     );
 
-    // Ẩn các trường nhạy cảm trước khi trả về
     const {password: _, ...userWithoutPassword} = user.toJSON();
 
     res.status(200).json({
