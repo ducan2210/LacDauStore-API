@@ -19,7 +19,6 @@ export const createOrderItem = async (req: Request, res: Response) => {
       orderItem: orderItem,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error creating orderItem'});
   }
 };

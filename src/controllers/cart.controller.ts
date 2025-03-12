@@ -33,7 +33,6 @@ export const addToCart = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error processing cart'});
   }
 };
@@ -51,7 +50,6 @@ export const getCartById = async (req: Request, res: Response) => {
       res.status(404).json({message: 'No cart found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while fetching the cart:', error);
     res.status(500).json({
       error:
         'An error occurred while retrieving the cart. Please try again later.',
@@ -75,7 +73,6 @@ export const deleteItemInCart = async (req: Request, res: Response) => {
       res.status(404).json({message: 'No cart found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while fetching the cart:', error);
     res.status(500).json({
       error:
         'An error occurred while retrieving the cart. Please try again later.',
@@ -92,9 +89,6 @@ export const updateItemInCart = async (
     const cartItem = await Cart.findOne({
       where: {user_id: user_id, cart_id: cart_id},
     });
-
-    console.log(cartItem);
-
     if (cartItem) {
       cartItem.quantity = Number(quantity);
       cartItem.status = Number(status);
@@ -107,7 +101,6 @@ export const updateItemInCart = async (
       res.status(404).json({message: 'No cart found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while updating the cart:', error);
     res.status(500).json({
       error:
         'An error occurred while updating the cart. Please try again later.',
@@ -158,7 +151,6 @@ export const getCalculateCartTotal = async (
 
     res.status(200).json({total: formattedTotal});
   } catch (error) {
-    console.error('Error while calculating cart total:', error);
     res.status(500).json({
       error:
         'An error occurred while calculating the cart total. Please try again later.',
@@ -185,7 +177,6 @@ export const deleteItemInCartAfterCheckOut = async (
       res.status(404).json({message: 'No cart found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while fetching the cart:', error);
     res.status(500).json({
       error:
         'An error occurred while retrieving the cart. Please try again later.',

@@ -13,6 +13,7 @@ import order from './routes/order.route';
 import orderItem from './routes/orderItem.route';
 import auth from './routes/auth.route';
 import personalNotification from './routes/personalNotification.route';
+import review from './routes/review.route';
 const app = express();
 const port = 3000;
 
@@ -29,6 +30,7 @@ app.use('/api', order);
 app.use('/api', orderItem);
 app.use('/api', auth);
 app.use('/api', personalNotification);
+app.use('/api', review);
 sequelize
   .authenticate()
   .then(() => {

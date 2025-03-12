@@ -1,6 +1,5 @@
-import { DataTypes, Model } from 'sequelize';
+import {DataTypes, Model} from 'sequelize';
 import sequelize from '../config/database';
-
 
 class User extends Model {
   public user_id!: number;
@@ -12,6 +11,7 @@ class User extends Model {
   public status!: 'active' | 'inactive' | 'banned';
   public created_at!: Date;
   public updated_at!: Date;
+  public avatar!: string;
 }
 
 User.init(
@@ -53,12 +53,16 @@ User.init(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    avatar: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
   },
   {
     sequelize,
     tableName: 'users',
     timestamps: false,
-  }
+  },
 );
 
 export default User;

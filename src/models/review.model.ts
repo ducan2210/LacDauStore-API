@@ -11,6 +11,7 @@ class Review extends Model {
   public comment!: string | null;
   public created_at!: Date;
   public updated_at!: Date;
+  public photos!: string | null;
 }
 
 Review.init(
@@ -47,6 +48,10 @@ Review.init(
     updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    photos: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {

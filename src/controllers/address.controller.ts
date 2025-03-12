@@ -2,7 +2,6 @@ import {Request, Response} from 'express';
 import Address from '../models/address.model';
 
 export const getAddressByUserId = async (req: Request, res: Response) => {
-  console.log(req.query); // Kiểm tra xem req.query có chứa giá trị gì
   try {
     const user = await Address.findAll({
       where: {user_id: req.query.user_id},
@@ -13,14 +12,12 @@ export const getAddressByUserId = async (req: Request, res: Response) => {
       res.status(404).json({message: 'Not found'});
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching address'});
   }
 };
 
 export const updateDefaultAddress = async (req: Request, res: Response) => {
   const {user_id, address_id, is_default} = req.query;
-  console.log(req.query);
   try {
     // Kiểm tra và chuyển đổi is_default thành số
     const isDefaultNumber = Number(is_default);
@@ -48,7 +45,6 @@ export const updateDefaultAddress = async (req: Request, res: Response) => {
         .json({message: 'No address found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while updating the address:', error);
     res.status(500).json({
       error:
         'An error occurred while updating the address. Please try again later.',
@@ -72,7 +68,6 @@ export const deleteAddress = async (req: Request, res: Response) => {
         .json({message: 'No address found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while deleting the address:', error);
     res.status(500).json({
       error:
         'An error occurred while deleting the address. Please try again later.',
@@ -108,7 +103,6 @@ export const createAddress = async (req: Request, res: Response) => {
       address: address,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error creating address'});
   }
 };
@@ -148,7 +142,6 @@ export const updateAddress = async (req: Request, res: Response) => {
         .json({message: 'No address found for the specified user.'});
     }
   } catch (error) {
-    console.error('Error while updating the address:', error);
     res.status(500).json({
       error:
         'An error occurred while updating the address. Please try again later.',

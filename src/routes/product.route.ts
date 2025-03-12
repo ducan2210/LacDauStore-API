@@ -6,6 +6,7 @@ import {
   getProductById,
   searchProduct,
   getProductDetailByID,
+  getProductRecommend,
 } from '../controllers/product.controller';
 
 const router = express.Router();
@@ -16,4 +17,6 @@ router.get('/GetAllProductAvailability', getAllProductAvailability);
 router.get('/GetProductById', getProductById);
 router.get('/GetProductByCategoryID', getProductByCategoryID);
 router.get('/GetProductDetailByID', getProductDetailByID);
+router.get('/GetProductRecommend', getProductRecommend);
+
 export default router;

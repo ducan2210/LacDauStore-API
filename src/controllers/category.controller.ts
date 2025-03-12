@@ -1,52 +1,46 @@
-
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import Category from '../models/category.model';
 
 export const getCategory = async (req: Request, res: Response) => {
-  console.log(req.query); // Kiểm tra xem req.query có chứa giá trị gì
   try {
-    const category = await Category.findAll({where:  { parent_id: null}})
+    const category = await Category.findAll({where: {parent_id: null}});
     if (category) {
       res.status(200).json(category);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({message: 'Product not found'});
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching product' });
+    res.status(500).json({error: 'Error fetching product'});
   }
 };
 
-export const getAllCategoryChildren= async (req: Request, res: Response) => {
-  console.log(req.query); // Kiểm tra xem req.query có chứa giá trị gì
+export const getAllCategoryChildren = async (req: Request, res: Response) => {
   try {
     const category = await Category.findAll({
-      where: { parent_id: req.query.parent_id },
+      where: {parent_id: req.query.parent_id},
     });
     if (category) {
       res.status(200).json(category);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({message: 'Product not found'});
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching roduct' });
+    res.status(500).json({error: 'Error fetching roduct'});
   }
 };
 
-export const getAllCategoryRoot= async (req: Request, res: Response) => {
+export const getAllCategoryRoot = async (req: Request, res: Response) => {
   try {
     const category = await Category.findAll({
-      where: { parent_id: null },
+      where: {parent_id: null},
     });
     if (category) {
       res.status(200).json(category);
     } else {
-      res.status(404).json({ message: 'Product not found' });
+      res.status(404).json({message: 'Product not found'});
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching roduct' });
+    res.status(500).json({error: 'Error fetching roduct'});
   }
 };
 
@@ -76,8 +70,6 @@ export const getCategoryTree = async (req: Request, res: Response) => {
     // Trả về dữ liệu dạng cây
     res.status(200).json(categoryTree);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching category tree' });
+    res.status(500).json({error: 'Error fetching category tree'});
   }
 };
-

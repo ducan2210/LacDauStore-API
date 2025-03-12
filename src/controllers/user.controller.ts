@@ -58,7 +58,6 @@ export const loginWithGoogle = async (
       user: userWithoutPassword,
     });
   } catch (error) {
-    console.error('Error in Google login:', error);
     res.status(500).json({error: 'Error logging in with Google'});
   }
 };
@@ -102,7 +101,6 @@ export const createUser = async (req: Request, res: Response) => {
       user: userWithoutPassword,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error creating user'});
   }
 };
@@ -143,13 +141,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       user: userWithoutPassword,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error logging in'});
   }
 };
 
 export const getUserByUsername = async (req: Request, res: Response) => {
-  console.log(req.query); // Kiểm tra xem req.query có chứa giá trị gì
   try {
     const user = await User.findOne({
       where: {username: req.query.username},
@@ -160,15 +156,12 @@ export const getUserByUsername = async (req: Request, res: Response) => {
       res.status(404).json({message: 'User not found'});
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching user'});
   }
 };
 
 export const updateUser: RequestHandler = async (req, res) => {
   const {password, email, phone} = req.body;
-  console.log('Query Username:', req.query.username);
-  console.log('Request Body:', req.body);
   try {
     const user = await User.findOne({
       where: {username: req.query.username},
@@ -194,7 +187,6 @@ export const updateUser: RequestHandler = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error updating user'});
   }
 };

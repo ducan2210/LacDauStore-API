@@ -1,17 +1,26 @@
-
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import Stripe from 'stripe';
 
-const stripe = new Stripe('sk_test_51QpvILKa0s3UXoTKK1xG3vOJnF62iTCBPottyoNxuntNNQkgtzlWbOS3p8JxU6EVpPhrBJHknEaFiPRteTJPBu5M00rqDkIseh');
+const stripe = new Stripe(
+  'sk_test_51QpvILKa0s3UXoTKK1xG3vOJnF62iTCBPottyoNxuntNNQkgtzlWbOS3p8JxU6EVpPhrBJHknEaFiPRteTJPBu5M00rqDkIseh',
+);
 
-export const createPaymentUrl = async (req: Request, res: Response): Promise<void> => {
+export const createPaymentUrl = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     // Kiểm tra và chuyển đổi amount thành số
     const amount = req.body.amount;
-    const amountNumber = typeof amount === 'string' ? parseFloat(amount) : typeof amount === 'number' ? amount : undefined;
+    const amountNumber =
+      typeof amount === 'string'
+        ? parseFloat(amount)
+        : typeof amount === 'number'
+        ? amount
+        : undefined;
 
     if (amountNumber === undefined || isNaN(amountNumber)) {
-      res.status(400).json({ error: 'Invalid amount' });
+      res.status(400).json({error: 'Invalid amount'});
       return;
     }
 
@@ -25,9 +34,8 @@ export const createPaymentUrl = async (req: Request, res: Response): Promise<voi
     });
 
     // Trả về client_secret
-    res.json({ clientSecret: paymentIntent.client_secret });
+    res.json({clientSecret: paymentIntent.client_secret});
   } catch (e) {
-    console.error('Error creating PaymentIntent:', e);
     res.status(400).json({
       error: 'An error occurred while creating the PaymentIntent',
     });

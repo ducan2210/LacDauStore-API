@@ -1,11 +1,13 @@
 import {Request, Response} from 'express';
 import Product from '../models/product.model';
-import {Op, where} from 'sequelize';
+import {Op, Sequelize, where} from 'sequelize';
 import Category from '../models/category.model';
 import Supplier from '../models/supplier.model';
 import Review from '../models/review.model';
+import User from '../models/user.model';
+import Promotion from '../models/promotion.model';
+import ProductPromotion from '../models/productPromotion.model';
 export const getAllProduct = async (req: Request, res: Response) => {
-  console.log(req.query); // Kiểm tra xem req.query có chứa giá trị gì
   try {
     const product = await Product.findAll();
     if (product) {
@@ -14,7 +16,6 @@ export const getAllProduct = async (req: Request, res: Response) => {
       res.status(404).json({message: 'Product not found'});
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching product'});
   }
 };
@@ -38,13 +39,11 @@ export const getAllProductAvailability = async (
       res.status(404).json({message: 'No products available'});
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching products'});
   }
 };
 
 export const getProductById = async (req: Request, res: Response) => {
-  console.log(req.query);
   try {
     const product = await Product.findOne({
       where: {
@@ -58,7 +57,6 @@ export const getProductById = async (req: Request, res: Response) => {
       res.status(404).json({message: 'No product available'});
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching product'});
   }
 };
@@ -67,9 +65,7 @@ export const searchProduct = async (
   req: Request,
   res: Response,
 ): Promise<Product | null | any> => {
-  const {query} = req.query; // Lấy chuỗi tìm kiếm từ query parameters
-  console.log(query);
-  // Kiểm tra query có phải là chuỗi hay không
+  const {query} = req.query;
   if (!query || typeof query !== 'string') {
     return res
       .status(400)
@@ -97,7 +93,6 @@ export const searchProduct = async (
     });
     res.status(200).json(products);
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error searching products'});
   }
 };
@@ -140,13 +135,11 @@ export const getProductByCategoryID = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching products'});
   }
 };
 
 export const getProductDetailByID = async (req: Request, res: Response) => {
-  console.log(req.query);
   try {
     const product = await Product.findOne({
       where: {
@@ -159,6 +152,11 @@ export const getProductDetailByID = async (req: Request, res: Response) => {
 
         {
           model: Review,
+          include: [
+            {
+              model: User,
+            },
+          ],
         },
       ],
     });
@@ -169,7 +167,36 @@ export const getProductDetailByID = async (req: Request, res: Response) => {
       res.status(404).json({message: 'No product available'});
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({error: 'Error fetching product'});
+  }
+};
+
+export const getProductRecommend = async (req: Request, res: Response) => {
+  try {
+    const product_id = Number(req.query.product_id);
+    const category_id = req.query.category_id
+      ? Number(req.query.category_id)
+      : null;
+    const name = req.query.name as string | undefined;
+    const supplier_id = req.query.supplier_id
+      ? Number(req.query.supplier_id)
+      : null;
+
+    const relatedProducts = await Product.findAll({
+      where: {
+        product_id: {[Op.ne]: product_id},
+        [Op.or]: [
+          {discount_price: {[Op.ne]: null}},
+          name ? {name: {[Op.like]: `%${name}%`}} : {},
+          category_id ? {category_id} : {},
+          supplier_id ? {supplier_id} : {},
+        ],
+      },
+      order: [[Sequelize.literal('discount_price IS NOT NULL'), 'DESC']],
+    });
+
+    res.status(200).json(relatedProducts);
+  } catch (error) {
+    res.status(500).json({error: 'Error fetching related products'});
   }
 };

@@ -78,9 +78,9 @@ export const getOrderById = async (req: Request, res: Response) => {
       res.status(200).json({order});
     }
   } catch (error) {
-    console.error('Lỗi khi lấy đơn hàng:', error);
     res.status(500).json({
-      error: 'Đã xảy ra lỗi khi lấy đơn hàng. Vui lòng thử lại sau.',
+      error:
+        'An error occurred while fetching the order. Please try again later.',
     });
   }
 };
