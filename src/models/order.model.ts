@@ -65,6 +65,8 @@ User.hasMany(Order, {foreignKey: 'user_id'});
 Order.belongsTo(PaymentMethod, {
   foreignKey: 'payment_method_id',
 });
-PaymentMethod.hasMany(Order, {foreignKey: 'payment_method_id'});
+PaymentMethod.hasMany(Order, { foreignKey: 'payment_method_id' });
+
+
 
 export default Order;

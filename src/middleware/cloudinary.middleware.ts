@@ -18,6 +18,5 @@ const storage = new CloudinaryStorage({
   }),
 });
 
-// Cấu hình multer
 const uploadMultiple = multer({storage}).array('images', 10);
 export default uploadMultiple;

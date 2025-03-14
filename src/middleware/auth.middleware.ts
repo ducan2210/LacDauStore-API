@@ -9,7 +9,6 @@ export const authenticateToken = (
   res: Response,
   next: NextFunction,
 ): void => {
-  // Lấy token từ header "Authorization"
   const token = req.headers['authorization']?.split(' ')[1]; // Lấy token từ "Bearer <token>"
 
   if (!token) {

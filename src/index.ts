@@ -14,8 +14,17 @@ import orderItem from './routes/orderItem.route';
 import auth from './routes/auth.route';
 import personalNotification from './routes/personalNotification.route';
 import review from './routes/review.route';
+import message from './routes/message.route';
+import http from 'http';
+import {initializeSocket} from './config/socketIO';
+import {setSocketInstance} from './controllers/message.controller';
+
 const app = express();
 const port = 3000;
+const server = http.createServer(app);
+const io = initializeSocket(server);
+
+setSocketInstance(io); // 📢 Gán io vào controller
 
 app.use(bodyParser.json());
 app.use('/api', userRoutes);
@@ -31,6 +40,7 @@ app.use('/api', orderItem);
 app.use('/api', auth);
 app.use('/api', personalNotification);
 app.use('/api', review);
+app.use('/api', message);
 sequelize
   .authenticate()
   .then(() => {
@@ -40,6 +50,6 @@ sequelize
     console.error('Database connection failed:', err);
   });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

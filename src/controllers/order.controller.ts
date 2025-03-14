@@ -3,6 +3,7 @@ import Order from '../models/order.model';
 import OrderItem from '../models/orderItem.model';
 import Product from '../models/product.model';
 import PaymentMethod from '../models/paymentMethod.model';
+import Review from '../models/review.model';
 
 export const createOrder = async (req: Request, res: Response) => {
   const {
@@ -70,6 +71,9 @@ export const getOrderById = async (req: Request, res: Response) => {
         {
           model: PaymentMethod, // Lấy thông tin phương thức thanh toán
           attributes: ['payment_method_id', 'method_name'],
+        },
+        {
+          model: Review,
         },
       ],
     });

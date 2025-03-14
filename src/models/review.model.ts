@@ -2,6 +2,7 @@ import {DataTypes, Model} from 'sequelize';
 import sequelize from '../config/database';
 import User from './user.model';
 import Product from './product.model';
+import Order from './order.model';
 
 class Review extends Model {
   public review_id!: number;
@@ -12,6 +13,7 @@ class Review extends Model {
   public created_at!: Date;
   public updated_at!: Date;
   public photos!: string | null;
+  public order_id!: number;
 }
 
 Review.init(
@@ -53,6 +55,10 @@ Review.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    order_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -67,4 +73,6 @@ User.hasMany(Review, {foreignKey: 'user_id'});
 Review.belongsTo(Product, {foreignKey: 'product_id'});
 Product.hasMany(Review, {foreignKey: 'product_id'});
 
+Review.belongsTo(Order, {foreignKey: 'order_id'});
+Order.hasMany(Review, {foreignKey: 'order_id'});
 export default Review;
